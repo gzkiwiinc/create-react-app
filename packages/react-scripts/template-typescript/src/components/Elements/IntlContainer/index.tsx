@@ -1,20 +1,17 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { IAppState } from "../../../store/index";
 import { IntlProvider } from "react-intl";
-import { getLocales, ILocales } from "../../../intl/index";
+import { getLocales, ILocales } from "src/intl";
 
-interface ConnectedProps
+interface Props
 {
 	locale: ILocales;
 }
 
-export class IntlContainer extends React.PureComponent<ConnectedProps, {}> {
+export class IntlContainer extends React.PureComponent<Props, {}> {
 	public render()
 	{
 		return (
-			<div>
+			<div style={{ width: '100%', height: '100%' }}>
 				<IntlProvider
 					locale={this.props.locale}
 					messages={getLocales(this.props.locale)}
@@ -32,24 +29,4 @@ export class IntlContainer extends React.PureComponent<ConnectedProps, {}> {
 	}
 }
 
-const mapStateToProps = (state: IAppState) =>
-{
-	return {
-		locale: state.application.locale,
-	};
-};
-
-const mapActionsToProps = dispatch =>
-{
-	return {
-		actions: bindActionCreators(
-			{},
-			dispatch
-		),
-	};
-};
-
-export default connect(
-	mapStateToProps,
-	mapActionsToProps
-)(IntlContainer);
+export default IntlContainer;

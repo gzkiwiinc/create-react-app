@@ -3,13 +3,11 @@
 
 'use strict';
 const path = require('path');
-const webpack = require('webpack');
-
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
 
 const DEV = process.env.NODE_ENV === 'development';
@@ -27,7 +25,6 @@ module.exports = {
 		: {
 			app: path.resolve(__dirname, '..', 'src/boot-client.tsx'),
 		},
-	mode: DEV ? 'development' : 'production',
 
 	resolve: {
 		alias: {
@@ -72,7 +69,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(png|gif|jpg|jpeg|xml|json)$/,
+				test: /\.(png|gif|jpg|jpeg|xml|ico)$/,
 				exclude: [/node_modules\/proj4/, /node_modules\/antd/],
 				loader: 'url-loader',
 				options: {
@@ -172,7 +169,6 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, '..', 'wwwroot/template.html'),
 			inject: true,
-			PUBLIC_URL: process.env.PUBLIC_URL,
 		}),
 		new CopyWebpackPlugin([
 			{
@@ -181,6 +177,9 @@ module.exports = {
 				writeToDisk: true,
 			},
 		]),
+		new Dotenv({
+			path: path.resolve(__dirname, '..', `env/${process.env.NODE_ENV}.env`),
+		}),
 		new WriteFilePlugin(),
 	],
 };

@@ -25,6 +25,15 @@ export class CloseAlertAction extends StrongAction
 {
 }
 
+@TypeName('SET_PAGE_UNLOAD_HANDLER')
+export class SetPageUnloadHandler extends StrongAction
+{
+	constructor(public handler?: () => void)
+	{
+		super();
+	}
+}
+
 export interface IApplicationAction
 {
 	showLoading: (text?: string) => any;

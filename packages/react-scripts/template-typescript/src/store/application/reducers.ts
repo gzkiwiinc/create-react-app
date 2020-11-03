@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { ILocales } from '../../intl/index';
 import { isActionType } from '../../common/StrongAction'
-import { ShowAlertAction, CloseAlertAction, SetLoadingAction } from './actions';
+import { ShowAlertAction, CloseAlertAction, SetLoadingAction, SetPageUnloadHandler } from './actions';
 
 export interface ILoading
 {
@@ -21,6 +21,7 @@ export interface IApplicationState
 	alert: IAlert,
 	loading: ILoading,
 	locale: ILocales,
+	pageUnloadHandler?: () => void,
 }
 
 const initialAlertState: IAlert = {
@@ -59,6 +60,13 @@ export default function applicationReducer(state = initialState, action): IAppli
 			...state,
 			alert: initialAlertState
 		}
+	}
+	else if (isActionType(action, SetPageUnloadHandler))
+	{
+		return {
+			...state,
+			pageUnloadHandler: action.handler,
+		};
 	}
 	return state
 }

@@ -8,7 +8,11 @@ import { createBrowserHistory } from "history";
 import { Router } from 'react-router-dom';
 import IntlContainer from "./components/Elements/IntlContainer";
 import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
 import HttpManager from './http/HttpManager'
+import ErrorBoundary from './sentry/ErrorBoundary'
+import { initSentry } from './sentry/index';
 import '@babel/polyfill'
 
 /**
@@ -18,6 +22,10 @@ import '@babel/polyfill'
 global.Intl = require('intl');
 (window as any).Intl = require('intl');
 
+// @todo set sentry dsn
+initSentry('')
+
+// @todo set bassename
 const history = createBrowserHistory({ basename: "mesh-react-app" })
 
 const store = configureStore(history);
@@ -29,15 +37,17 @@ HttpManager.getInstance().init(store);
 const render = () =>
 {
 	ReactDOM.render(
-		<AppContainer>
-			<Provider store={store}>
-				<IntlContainer>
-					<ConfigProvider autoInsertSpaceInButton={false}>
-						<Router history={history} >{routes}</Router>
-					</ConfigProvider>
-				</IntlContainer>
-			</Provider>
-		</AppContainer>,
+		<ErrorBoundary>
+			<AppContainer>
+				<Provider store={store}>
+					<IntlContainer locale={store.getState().application.locale}>
+						<ConfigProvider autoInsertSpaceInButton={false} locale={store.getState().application.locale === 'zh-CN' ? zhCN : enUS}>
+							<Router history={history} >{routes}</Router>
+						</ConfigProvider>
+					</IntlContainer>
+				</Provider>
+			</AppContainer>
+		</ErrorBoundary>,
 		document.getElementById('react-app')
 	);
 }
