@@ -1,2 +1,2 @@
 import HttpManager from './HttpManager';
-import { MESH_SERVER_URL } from '../constants/globals'
+export const isDev = process.env.NODE_ENV === 'development'

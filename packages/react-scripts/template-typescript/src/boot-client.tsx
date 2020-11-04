@@ -28,7 +28,7 @@ initSentry('')
 // @todo set bassename
 const history = createBrowserHistory({ basename: "mesh-react-app" })
 
-const store = configureStore(history);
+export const store = configureStore(history);
 
 const routes = createRoutes(store);
 
