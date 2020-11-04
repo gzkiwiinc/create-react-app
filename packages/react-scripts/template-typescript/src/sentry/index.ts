@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/browser';
-import { IUser } from '../http/Types';
 
 const pkg = require('../../package.json');
 
@@ -41,7 +40,7 @@ export const windowErrorListener = () =>
 	}
 }
 
-export const setSentryUser = (currentUser: IUser | null) =>
+export const setSentryUser = (currentUser: any) =>
 {
 	if (!ignoreSentry)
 	{

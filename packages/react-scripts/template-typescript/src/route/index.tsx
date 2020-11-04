@@ -10,14 +10,11 @@ import FilterRoute from './FilterRoute'
 export default (store: Store<any>) => (
 	<App>
 		<FilterRoute>
-			<div>
-				<Switch>
-					<Route path={URLS.ERROR} component={Error} />
-					<Route path={URLS.HOME} component={Home} />
-					<Redirect to={URLS.HOME} />
-				</Switch>
-			</div>
-
+			<Switch>
+				<Route path={URLS.ERROR} component={Error} />
+				<Route path={URLS.HOME} component={Home} />
+				<Redirect to={URLS.HOME} />
+			</Switch>
 		</FilterRoute>
 	</App>
 );

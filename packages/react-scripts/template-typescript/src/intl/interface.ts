@@ -1,7 +1,7 @@
 interface ILocalization extends Record<string, string>
 {
-	hello_world: string;
-	page_not_found: string;
+	HELLO_WORD: string;
+	PAGE_NOT_FOUND: string;
 }
 export
 {

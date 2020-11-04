@@ -1,8 +1,8 @@
 
 import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom'
-import { URLS } from '../../../constants/urls'
-import styles from '../../../styles/pages/error/index.module.scss'
+import { URLS } from 'src/constants/urls'
+import styles from 'src/styles/pages/error/index.module.scss'
 import NotFound from './NotFound'
 
 export default class Error extends React.PureComponent<{}, {}>

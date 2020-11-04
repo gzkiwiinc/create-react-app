@@ -1,3 +1,18 @@
+// @todo: Add Permission Action
+export enum PermissionAction
+{
+	VIEW = "VIEW",
+	READ = "READ",
+	CREATE = "CREATE",
+	UPDATE = "UPDATE",
+}
+
+// @todo: Add Permission Subject
+export enum PermissionSubject
+{
+	TEST = "test",
+}
+
 export enum ResponseCode
 {
 	/**

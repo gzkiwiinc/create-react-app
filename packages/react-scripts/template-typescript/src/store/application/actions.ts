@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { TypeName, StrongAction } from '../../common/StrongAction'
 import { IAlert, ILoading } from './reducers';
+import { AppAbilityRules } from 'src/components/Elements/Ability/Can';
 
 @TypeName('SET_LOADING')
 export class SetLoadingAction extends StrongAction
@@ -34,12 +35,22 @@ export class SetPageUnloadHandler extends StrongAction
 	}
 }
 
+@TypeName('UPDATE_ABILITY')
+export class UpdateAbilityAction extends StrongAction
+{
+	constructor(public payload: AppAbilityRules)
+	{
+		super()
+	}
+}
+
 export interface IApplicationAction
 {
 	showLoading: (text?: string) => any;
 	hideLoading: () => any;
 	showAlert: (title: string | ReactNode, content: string | ReactNode) => any;
 	closeAlert: () => any;
+	updateAbility: (rules?: AppAbilityRules) => any;
 }
 
 export const actionCreators: IApplicationAction = {
@@ -49,4 +60,8 @@ export const actionCreators: IApplicationAction = {
 		title, content, visible: true
 	})),
 	closeAlert: (): any => dispatch => dispatch(new CloseAlertAction()),
+	updateAbility: (rules?: AppAbilityRules): any => async (dispatch, getState) =>
+	{
+		rules && dispatch(new UpdateAbilityAction(rules))
+	},
 }

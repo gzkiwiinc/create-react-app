@@ -1,4 +1,4 @@
-export const ROOT = process.env.LOCAL_SERVER ? "" : "";
+export const ROOT = "";
 
 export const URLS = {
 	HOME: ROOT + "/",
