@@ -1,0 +1,13 @@
+@import "src/styles/colors";
+@import "src/styles/fonts";
+@import "src/styles/media";
+@import "src/styles/common";
+
+$namespace: "exceptionpage";
+
+.#{$namespace} {
+	@include flexContainer(column);
+	width: 100%;
+	height: 100%;
+	background-color: $background1;
+}

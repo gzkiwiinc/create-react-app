@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IAppState } from '../../../../store';
-import Message from '../../../Elements/Message/index';
+import { IAppState } from 'src/store';
+import Message from 'src/components/Elements/Message/index';
 
 class NotFound extends React.Component<{}, {}>
 {
@@ -11,7 +11,7 @@ class NotFound extends React.Component<{}, {}>
 	{
 		return (
 			<div>
-				<div style={{ position: "absolute", zIndex: 1000 }}>{Message('page_not_found')}</div>
+				<div style={{ position: "absolute", zIndex: 1000 }}>{Message('PAGE_NOT_FOUND')}</div>
 			</div>
 		);
 	}

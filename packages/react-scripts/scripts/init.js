@@ -82,45 +82,63 @@ module.exports = function(
   originalDirectory,
   template
 ) {
+  console.warn('args => ', ...arguments);
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
   );
   const appPackage = require(path.join(appPath, 'package.json'));
   const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
-
-  // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-
   const useTypeScript = appPackage.dependencies['typescript'] != null;
-
-  // Setup the script rules
-  appPackage.scripts = {
-    dev: './scripts/dev.sh',
-    build: 'rm -rf ./wwwroot/dist/** && mesh build reactapp',
-    deploy: 'mesh deploy reactapp',
-    bootstrap: './scripts/bootstrap.sh',
-    lint: "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
-		'lint:fix': "tslint --fix -c tslint.json 'src/**/*.{ts,tsx}'"
-  };
-
-  // Setup engine requirements
-  appPackage.engines = {
-    node: '>= 6.0.0',
-    npm: '>= 3.0.0',
-  };
-
-  // Setup the eslint config
-  appPackage.eslintConfig = {
-    extends: 'react-app',
-  };
-
-  // Setup the browsers list
-  appPackage.browserslist = defaultBrowsers;
-
-  fs.writeFileSync(
-    path.join(appPath, 'package.json'),
-    JSON.stringify(appPackage, null, 2) + os.EOL
-  );
+  // Copy the files for the user
+  const templatePath = template
+    ? path.resolve(originalDirectory, template)
+    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
+  if (fs.existsSync(templatePath)) {
+    const tempPackage = require(path.join(
+      templatePath,
+      'template-package.json'
+    ));
+    if (tempPackage) {
+      const temp_dependencies = tempPackage.dependencies || {};
+      const app_dependencies = appPackage.dependencies || {};
+      const app_dev_dependencies = appPackage.devDependencies || {};
+      for (const key in app_dependencies) {
+        if (key.startsWith('@types/')) {
+          app_dev_dependencies[key] = app_dependencies[key];
+          delete app_dependencies[key];
+        }
+      }
+      tempPackage.dependencies = Object.assign(
+        {},
+        temp_dependencies,
+        app_dependencies
+      );
+      tempPackage.devDependencies = Object.assign(
+        {},
+        tempPackage.devDependencies || {},
+        app_dev_dependencies
+      );
+    }
+    fs.copySync(templatePath, appPath, {
+      filter: (src, dest) => !src.includes('template-package.json'),
+    });
+    fs.writeFileSync(
+      path.join(appPath, 'package.json'),
+      JSON.stringify(
+        Object.assign(
+          { name: appPackage.name, version: appPackage.version },
+          tempPackage
+        ),
+        null,
+        2
+      ) + os.EOL
+    );
+  } else {
+    console.error(
+      `Could not locate supplied template: ${chalk.green(templatePath)}`
+    );
+    return;
+  }
 
   const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
   if (readmeExists) {
@@ -128,19 +146,6 @@ module.exports = function(
       path.join(appPath, 'README.md'),
       path.join(appPath, 'README.old.md')
     );
-  }
-
-  // Copy the files for the user
-  const templatePath = template
-    ? path.resolve(originalDirectory, template)
-    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
-  if (fs.existsSync(templatePath)) {
-    fs.copySync(templatePath, appPath);
-  } else {
-    console.error(
-      `Could not locate supplied template: ${chalk.green(templatePath)}`
-    );
-    return;
   }
 
   // modifies README.md commands based on user used package manager.
@@ -185,25 +190,11 @@ module.exports = function(
 
   if (useYarn) {
     command = 'yarnpkg';
-    args = ['add'];
+    args = ['install'];
   } else {
     command = 'npm';
-    args = ['install', '--save', verbose && '--verbose'].filter(e => e);
+    args = ['install', verbose && '--verbose'].filter(e => e);
   }
-  args.push(
-    'react',
-    'react-dom',
-    'react-redux',
-    'react-router',
-    'react-router-dom',
-    'react-router-redux',
-    'redux',
-    'redux-observable',
-    'redux-thunk',
-    'reselect',
-    'antd',
-    'node-sass'
-  );
 
   // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(

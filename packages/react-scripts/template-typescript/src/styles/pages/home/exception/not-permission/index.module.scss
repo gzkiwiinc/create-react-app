@@ -1,0 +1,19 @@
+@import "src/styles/colors";
+@import "src/styles/fonts";
+@import "src/styles/media";
+@import "src/styles/common";
+
+$namespace: "notpermission";
+
+.#{$namespace} {
+	@include flexContainer(column, center);
+	width: 100%;
+	height: 100%;
+	background-color: $background1;
+	
+	.exceptionText {
+		@include label(14px, $black1, 1.43);
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+		text-align: center;
+	}
+}

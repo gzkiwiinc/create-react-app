@@ -16,9 +16,6 @@ module.exports = {
 	},
 	plugins: [
 		...baseConfig.plugins,
-		new webpack.DefinePlugin({
-			LOCAL_SERVER: process.env.LOCAL_SERVER,
-		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css',
